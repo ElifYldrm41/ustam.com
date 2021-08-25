@@ -1,3 +1,29 @@
+<?php
+//Start the session
+session_start();
+include "../common/db.php";
+
+$mesaj= "";
+
+
+if(isset ($_POST['gonder'])){
+$sql ="SELECT sifre FROM kullanici WHERE eposta= '" .$_POST['eposta']."'";
+$sonuc = $conn->query($sql);
+
+if($sonuc->num_rows == 1){
+    $kayit=$sonuc->fetch_assoc();
+    if($kayit ['sifre']== $_POST['sifre']){
+        $_SESSION['oturum']=true;
+        header('Location: index.php');
+        exit;
+    }else{
+        $mesaj = "<div class='alert alert-danger'>Şifre veya Kullanıcı Adı Hatalıdır!</div>";
+    }
+}
+}else{
+    $mesaj = "<div class='alert alert-danger'>Şifre veya Kullanıcı Adı Hatalıdır!</div>";
+}
+?>
 <!DOCTYPE html>
 <html lang="en" class="h-100">
 
@@ -22,14 +48,14 @@
                             <div class="col-xl-12">
                                 <div class="auth-form">
                                     <h4 class="text-center mb-4">Sign in your account</h4>
-                                    <form action="index.html">
+                                    <form action="login.php"method ="post">
                                         <div class="form-group">
                                             <label><strong>Email</strong></label>
-                                            <input type="email" class="form-control" value="hello@example.com">
+                                            <input type="email" name="eposta" class="form-control" value="hello@example.com">
                                         </div>
                                         <div class="form-group">
                                             <label><strong>Password</strong></label>
-                                            <input type="password" class="form-control" value="Password">
+                                            <input type="password" name="sifre"class="form-control" value="Password">
                                         </div>
                                         <div class="form-row d-flex justify-content-between mt-4 mb-2">
                                             <div class="form-group">
@@ -43,7 +69,7 @@
                                             </div>
                                         </div>
                                         <div class="text-center">
-                                            <button type="submit" class="btn btn-primary btn-block">Sign me in</button>
+                                            <button type="submit" name="gonder" class="btn btn-primary btn-block">Sign me in</button>
                                         </div>
                                     </form>
                                     <div class="new-account mt-3">
@@ -51,7 +77,9 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                           
+                        <?=$mesaj ?>     
+                        
                     </div>
                 </div>
             </div>

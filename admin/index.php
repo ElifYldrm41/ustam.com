@@ -1,3 +1,10 @@
+<?php
+session_start();
+
+if($_SESSION['oturum'] !== true){
+    header('Location: login.php');
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 
